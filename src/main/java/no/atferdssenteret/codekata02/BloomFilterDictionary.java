@@ -1,14 +1,15 @@
 package no.atferdssenteret.codekata02;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 public class BloomFilterDictionary {
@@ -42,9 +43,14 @@ public class BloomFilterDictionary {
 	return noOfWords;
     }
 
-    public void loadDictionary(File dictionaryFile) throws IOException {
-	List<String> words = FileUtils.readLines(dictionaryFile);
-	for (String word : words) {
+    public void loadDictionary(InputStream dictionaryStream) throws IOException {
+//	BufferedInputStream buf = new BufferedInputStream(dictionaryStream);
+//	List<String> words = FileUtils.readLines(dictionaryFile);
+	Reader r = new InputStreamReader(dictionaryStream); 
+	BufferedReader buff = new BufferedReader(r);
+	String word = null;
+
+	while ((word = buff.readLine()) != null) {
 	    learnWord(word);
 	}
     }

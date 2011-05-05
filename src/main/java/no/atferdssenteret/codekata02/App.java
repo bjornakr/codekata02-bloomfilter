@@ -1,6 +1,7 @@
 package no.atferdssenteret.codekata02;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class App {
@@ -12,7 +13,8 @@ public class App {
 	
 	dictionary = new BloomFilterDictionary(dictionarySize, noOfHashes);
 	try {
-	    dictionary.loadDictionary(new File("src/main/resources/wordlist.txt"));
+	    File dictionaryFile = new File("src/main/resources/wordlist.txt");
+	    dictionary.loadDictionary(new FileInputStream(dictionaryFile));
 	}
 	catch (IOException e) {
 	    e.printStackTrace();

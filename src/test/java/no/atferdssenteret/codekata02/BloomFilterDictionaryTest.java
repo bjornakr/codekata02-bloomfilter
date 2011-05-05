@@ -1,10 +1,13 @@
 package no.atferdssenteret.codekata02;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class BloomFilterDictionaryTest {
 
@@ -18,13 +21,15 @@ public class BloomFilterDictionaryTest {
 
     @Test
     public void testLoadDictionary() {
-	File dictionaryTestFile = new File("src/test/resources/wordlist-test.txt");
+	String[] testWords = { "swashbuckler", "honeysuckle", "bushwhacker" };
+
+	byte[] testWordsForStream = createTestWordsForByteStream(testWords);
+	InputStream testWordsStream = new ByteArrayInputStream(testWordsForStream);
 	BloomFilterDictionary dictionary = new BloomFilterDictionary();
 	try {
-	    dictionary.loadDictionary(dictionaryTestFile);
-	    assertEquals(3, dictionary.size());
+	    dictionary.loadDictionary(testWordsStream);
+	    assertEquals(testWords.length, dictionary.size());
 
-	    String[] testWords = { "swashbuckler", "honeysuckle", "bushwhacker" };
 	    for (String testWord : testWords) {
 		assertTrue(dictionary.lookUp(testWord));
 	    }
@@ -33,13 +38,21 @@ public class BloomFilterDictionaryTest {
 	    e.printStackTrace();
 	}
     }
-    
-    @Test (expected=IllegalArgumentException.class)
+
+    private byte[] createTestWordsForByteStream(String[] testWords) {
+	String testWordsForStream = "";
+	for (String testWord : testWords) {
+	    testWordsForStream += testWord + "\n";
+	}
+	return testWordsForStream.getBytes();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testInitializationShouldFailIfProvidedInvalidNoOfBits() {
 	new BloomFilterDictionary(-1, 3);
     }
-    
-    @Test (expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void testInitializationShouldFailIfProvidedInvalidNoOfHashes() {
 	new BloomFilterDictionary(1000, 0);
     }
